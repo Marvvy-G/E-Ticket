@@ -1,0 +1,40 @@
+<%- include("partials/header") %>
+<%- include("partials/sidenav") %>
+<div class="mt-5 pt-3">
+    <div class="row">
+       <h1 style="text-align: center;">
+          Top Up Wallet
+       </h1>
+   
+       <div style="width: 50%; margin: 30px auto; ">
+           <form id="paymentForm" action="/api/wallet/top-up/<%=user._id%>" on:submit|preventDefault={paystack} method="POST">
+            <div class="form-group">
+                <label class="form-label" for="firstName">First Name</label>
+                <input class="form-control" type="firstName" id="firstName" name="firstName" placeholder="First Name" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="lastName">Last Name</label>
+                <input class="form-control" type="lastName" id="lastName" name="lastName" placeholder="Last Name" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="email">Email</label>
+                <input class="form-control" type="email" id="email" name="email" placeholder="Email" required>
+            </div>
+               <div class="form-group">
+                   <label class="form-label" for="amount">Amount</label>
+                   <input class="form-control" type="amount" id="amount" name="amount" placeholder="Amount" required>
+               </div>
+               <div class="form-group">
+                   <label class="form-label" for="number">Phone Number</label>
+                   <input class="form-control" id="number" name="number" placeholder="Phone Number" required>
+               </div>
+              <br>
+              <div class="form-group" >
+                   <button class="btn btn-lg btn-danger btn-block" type="submit" onclick="payWithPaystack()">Pay Now</button>
+              </div>
+               </form>
+               <a href="/">Back</a>
+       </div>
+    </div>
+</div>
+<%- include("partials/footer") %>

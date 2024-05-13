@@ -1,0 +1,82 @@
+<%- include("partials/header") %>
+<%- include("partials/sidenav") %>
+<div class="container">
+    <div class="header mt-3">
+        <h2 class="patient">All Tickets of <%= user.firstName %></h2> 
+    </div>
+
+    <table>
+        <% user.busTicket.forEach(function(busTicket) { %>
+            <tr>
+                <th><%= busTicket.createdAt %></th>
+                <td>
+                    <div class="col">
+                        <div class="debit-card">
+                            <h3 class="cardtittle"><%= busTicket.name %></h3>
+                            <h3 class="cardnumber"><%= busTicket.price %></h3>
+                            <h3 class="cardnumber"><%= busTicket.isUsed %> </h3>
+                            <h3 class="cardholder"><%= busTicket.createdBy %></h3>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        <% }) %>
+    </table>
+</div>
+
+     <% if (user.BusTicket && user.BusTicket.length > 0) { %>
+        <% user.BusTicket.forEach(function(BusTicket) { %>
+            <div class="col">
+                <div class="debit-card">
+                    <h3 class="cardtittle"><%= user.BusTicket.name %></h3>
+                    <h3 class="cardnumber"><%= BusTicket.price %></h3>
+                    <h3 class="cardnumber"><%= BusTicket.isUsed %> </h3>
+                    <h3 class="cardholder"><%= BusTicket.createdBy %></h3>
+                </div>
+            </div>
+        <% }) %>
+    <%}%>
+
+    <div class="mt-5 pt-3">
+        <h1 style="text-align: center;" id="#newticket">
+          New Ticket
+        </h1>
+        <h3 style="text-align: center;">
+           Buy a new Ticket
+        </h3>
+        
+         <div class="row">
+    
+            <div style="width: 70%; margin: 30px auto; ">
+                <form action="/api/busTicket/addnewbusticket/<%=user._id%>" method="POST">
+                    <div class="form-group" style="padding: 10px; ">
+                        <label for="name">Name</label>
+                                    <select class="form-control" name="name" id="name">
+                                
+                                      <option>General Ticket</option>
+                                      
+                                    </select>
+                    </div>
+                        <div class="form-group" style="padding: 10px; ">
+
+                            <label for="amount">Price</label>
+                            <select class="form-control" name="amount" id="amount">
+                              <option>500</option>
+                            </select>
+                          </div>
+                    
+                   <div class="form-group" style="padding: 10px; " >
+                        <button class="btn btn-lg btn-danger btn-block">Submit</button>
+                   </div>
+                    </form>
+                    <br>
+                    <a href="#">Dashboard</a>
+            </div>
+           
+         </div>
+    </div>
+    
+      
+   
+</div>
+<%- include("partials/footer") %>

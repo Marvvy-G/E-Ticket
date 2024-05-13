@@ -1,0 +1,36 @@
+<%- include("partials/header") %>
+<%- include("partials/sidenav") %>
+
+<div class="container">
+    <div class="header mt-3">
+        <h2><%= user.firstName%> <%= user.lastName%></h2> 
+     </div>
+    <table>
+     
+        <tr>
+            <th>Email</th>
+            <td><%=user.email%></td>
+        </tr>
+        <tr>
+            <th>Age</th>
+            <td><%=user.age%></td>
+        </tr>
+        <tr>
+            <th>Number</th>
+            <td><%=user.number%></td>
+        </tr>
+        <tr>
+            <th>Address</th>
+            <td><%=user.address%></td>
+        </tr> 
+        <tr>
+            <th>Wallet Balance</th>
+            <td><%=user.wallet%></td>
+        </tr> 
+    </table>
+    
+
+        
+    </div>
+
+<%- include("partials/footer") %>

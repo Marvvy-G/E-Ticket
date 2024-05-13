@@ -1,0 +1,103 @@
+<%- include("partials/header") %>
+<%- include("partials/sidenav") %>
+<!-- <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" type="/public/styles/styles.css"
+        href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/public/styles/styles.css">
+</head>
+
+<body>  -->
+    
+
+            <div class="main-body">
+                <div class="headtittle">
+                    <span class="greeeting">Hii <%= user.firstName%>, </span>
+                    <h2>Overview</h2>
+                </div>
+
+                <div class="cards">
+                    <div class="row row-1">
+                        <div class="col">
+                            <div class="balance-card">
+                                <h3 class="cardtittle">Balance</h3>
+                                <h2 class="balance">NGN <%= user.wallet[0].balance %></h2>
+                                <span class="balancestatus">+15%</span>
+                                <img width="60px" height="60px" src="/public/img/bar1.png" alt="">
+                            </div>
+                        </div>
+                      
+                        <!-- <div class="col">
+                            <div class="latest-activity">
+                                <h3 class="cardtittle">Latest activity</h3>
+                                <img width="100%" height="100px" src="/public/img/graph4.png" alt="">
+                            </div>
+                        </div> -->
+
+                        <div class="col">
+                            <div class="debit-card">
+                                <h3 class="cardtittle">Wallet ID</h3>
+                                <h3 class="cardnumber"><%= user.wallet[0].id %></h3>
+                                <h3 class="cardholder"><%= user.firstName%> <%= user.lastName%></h3>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="paid-invoice">
+                                <h3 class="cardtittle">Top Up Wallet</h3>
+                                <span class="p-i">yippie</span>
+                                <span class="status">
+                                   <a href="/api/wallet/topup/<%=user._id%>"><i class="fa fa-plus"></i></a> 
+                                    
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row row-2">
+                        <div class="col">
+                            <div class="total-invoice">
+                                <h3 class="cardtittle">Used Tickets</h3>
+                                <span class="t-i">520</span>
+                                <span class="status">+12%</san>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="paid-invoice">
+                                <h3 class="cardtittle">Unused Tickets</h3>
+                                <span class="p-i">210</span>
+                                <span class="status">
+                                    85%
+                                    <i class="fa fa-line-chart"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="unpaid-invoice">
+                                <h3 class="cardtittle">Buy New Ticket</h3>
+                                <span class="u-i">65</span>
+                                <span class="status">
+                                    15%
+                                    <i class="fa fa-line-chart"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="invoice-sent">
+                                <h3 class="cardtittle">All Your Bus Tickets</h3>
+                                <span class="i-s">120</span>
+                                <span class="status">
+                                    <i class="fa fa-check"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%- include("partials/footer") %>
