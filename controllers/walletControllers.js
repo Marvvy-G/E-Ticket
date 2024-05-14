@@ -44,7 +44,7 @@ exports.topUpWallet = async (req, res) => {
   // Prepare the Paystack API request parameters
   const params = JSON.stringify({
     email: email,
-    amount: amount, // Convert amount to kobo
+    amount: amount *100, // Convert amount to naira
     metadata: {
       firstName: firstName,
       lastName: lastName,
@@ -72,32 +72,41 @@ exports.topUpWallet = async (req, res) => {
     });
 
     resPaystack.on('end', async () => {
+     
+      const responseData = JSON.parse(data);
       
+      res.redirect(responseData.data.authorization_url);
       console.log(JSON.parse(data))
+      
+        // Check if payment was successful and contains the authorization URL
       try {
-        // Find the user by ID
-        const user = await User.findById(req.params.id);
+        
+          // Find the user by ID
+          const user = await User.findById(req.params.id);
 
-        if (!user) {
-          return res.status(404).json({ message: 'User not found' });
-        }
+          if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+          }
 
-        // Find the wallet associated with the user
-        const wallet = await Wallet.findOne({ user: user._id });
+          // Find the wallet associated with the user
+          const wallet = await Wallet.findOne({ user: user._id });
 
-        if (!wallet) {
-          return res.status(404).json({ message: 'Wallet not found' });
-        }
+          if (!wallet) {
+            return res.status(404).json({ message: 'Wallet not found' });
+          }
 
-        // Update the balance of the wallet
+          // Update the balance of the wallet
+          wallet.balance + amount;
 
-        wallet.balance += amount;
-
-        // Save the updated wallet
-        await wallet.save();
-        res.redirect("/api/auth/dashboard/" + req.params.id)
-        console.log({ balance: wallet.balance });
-      } catch (error) {
+          // Save the updated wallet
+          await wallet.save();
+          
+          // Redirect the user to the authorization URL
+          console.log({ balance: wallet.balance });
+      
+      }
+      
+      catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });
       }
