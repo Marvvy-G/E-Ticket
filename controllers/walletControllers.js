@@ -44,7 +44,7 @@ exports.topUpWallet = async (req, res) => {
   // Prepare the Paystack API request parameters
   const params = JSON.stringify({
     email: email,
-    amount: amount * 100, // Convert amount to kobo
+    amount: amount, // Convert amount to kobo
     metadata: {
       firstName: firstName,
       lastName: lastName,
@@ -72,6 +72,8 @@ exports.topUpWallet = async (req, res) => {
     });
 
     resPaystack.on('end', async () => {
+      
+      console.log(JSON.parse(data))
       try {
         // Find the user by ID
         const user = await User.findById(req.params.id);
@@ -88,6 +90,7 @@ exports.topUpWallet = async (req, res) => {
         }
 
         // Update the balance of the wallet
+
         wallet.balance += amount;
 
         // Save the updated wallet
@@ -99,9 +102,7 @@ exports.topUpWallet = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
       }
     });
-  });
-
-  reqPaystack.on('error', error => {
+  }).on('error', error => {
     console.error(error);
     res.status(500).json({ message: 'Error processing payment' });
   });

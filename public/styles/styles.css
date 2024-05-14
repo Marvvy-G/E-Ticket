@@ -70,7 +70,7 @@ body::after {
   }
 }
 
-.container {
+.containerp {
   width: 90%;
   height: 85vh;
   background: linear-gradient(
@@ -90,7 +90,7 @@ tr:nth-child(odd) {
   background-color: #336cfb;
 }
 
-.container .navbar {
+.containerp .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -98,12 +98,12 @@ tr:nth-child(odd) {
   margin-top: 1em;
 }
 
-.container .navbar .logo {
+.containerp .navbar .logo {
   display: flex;
   align-items: center;
 }
 
-.container .navbar .logo img {
+.containerp .navbar .logo img {
   animation: rotate 8s linear infinite;
 }
 
@@ -113,7 +113,7 @@ tr:nth-child(odd) {
   }
 }
 
-.container .navbar .logo .logoname {
+.containerp .navbar .logo .logoname {
   font-size: 18px;
   text-transform: uppercase;
   margin-left: 0.5em;
@@ -146,7 +146,7 @@ tr:nth-child(odd) {
   right: 10px;
 }
 
-.container .navbar .navitem {
+.containerp .navbar .navitem {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -211,12 +211,12 @@ tr:nth-child(odd) {
   color: #000;
 }
 
-.container-body {
+.containerp-body {
   display: grid;
   grid-template-columns: 18% auto;
 }
 
-.container-body .sidebar {
+.containerp-body .sidebar {
   margin: 20px 0 20px 20px;
   background: linear-gradient(
     to top right,
@@ -227,85 +227,85 @@ tr:nth-child(odd) {
   padding: 10px;
 }
 
-.container-body .sidebar ul li {
+.containerp-body .sidebar ul li {
   padding: 10px 10px;
   margin: 10px 0;
 }
 
-.container-body .sidebar ul li:hover {
+.containerp-body .sidebar ul li:hover {
   background: #00004d;
   color: #fff;
   border-radius: 8px;
 }
 
-.container-body .sidebar ul li a {
+.containerp-body .sidebar ul li a {
   color: #000;
   text-transform: capitalize;
   font-weight: bolder;
 }
 
-.container-body .sidebar ul li:hover a {
+.containerp-body .sidebar ul li:hover a {
   color: #fff;
 }
 
-.container-body .sidebar ul .dashboard {
+.containerp-body .sidebar ul .dashboard {
   background: #00004d;
   color: #fff;
   border-radius: 8px;
   padding: 10px;
 }
 
-.container-body .sidebar ul .dashboard a {
+.containerp-body .sidebar ul .dashboard a {
   color: #fff;
 }
 
-.container-body .sidebar ul li .fa {
+.containerp-body .sidebar ul li .fa {
   font-size: 18px;
   padding: 0 5px;
 }
 
-.container-body .main-body .headtittle {
+.containerp-body .main-body .headtittle {
   padding: 15px;
   margin: 20px;
   margin-bottom: 0;
 }
 
-.container-body .main-body .headtittle span {
+.containerp-body .main-body .headtittle span {
   text-transform: capitalize;
   font-weight: 700;
   font-size: 16px;
 }
 
-.container-body .main-body .headtittle h2 {
+.containerp-body .main-body .headtittle h2 {
   font-size: 25px;
   font-weight: normal;
 }
 
-.container-body .main-body .cards {
+.containerp-body .main-body .cards {
   display: grid;
   grid-template-rows: 180px 140px;
   grid-gap: 20px;
   padding: 20px;
 }
 
-.container-body .main-body .cards .row-1 {
+.containerp-body .main-body .cards .row-1 {
   display: grid;
   grid-template-columns: 30% 40% auto;
   grid-gap: 20px;
 }
 
-.container-body .main-body .cards .row-2 {
+.containerp-body .main-body .cards .row-2 {
   display: grid;
   grid-template-columns: repeat(4, auto);
   grid-gap: 20px;
 }
 
-.container-body .main-body .cards .row .col {
+.containerp-body .main-body .cards .row .col {
   background: rgba(255, 255, 255, 0.5);
   border-radius: 15px;
 }
 
-.container-body .main-body .cards .row .col .cardtittle {
+.containerp-body .main-body .cards .row .col .cardtittle {
   font-size: 16px;
   padding: 20px;
   text-transform: capitalize;
