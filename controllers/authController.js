@@ -22,7 +22,7 @@ exports.signup = asyncErrorHandler(async (req, res, next) => {
     await newUser.save();
 
     const token = signToken(newUser._id);
-    res.redirect("/api/auth/dashboard" + req.params.id)
+    res.redirect("/api/auth/dashboard/" + req.params.id)
     console.log(token, newUser, wallet);
     next();
 });
@@ -87,7 +87,7 @@ exports.login            =    asyncErrorHandler (async (req, res, next) => {
     const token = signToken(
         user._id
     )
-    res.redirect("/api/auth/dashboard" + req.params.id)
+    res.redirect("/api/auth/dashboard/" + req.params.id)
     console.log(token)
     next();
 })
