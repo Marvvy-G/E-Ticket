@@ -4,7 +4,6 @@ const bcrypt = require("bcryptjs");
 
 const UserSchema = new mongoose.Schema({
     busTicket: [{
-
         type: mongoose.Schema.Types.ObjectId,
         ref: "BusTicket"
     }],

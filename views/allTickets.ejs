@@ -1,51 +1,43 @@
 <%- include("partials/header") %>
 <%- include("partials/sidenav") %>
-<div class="container">
-    <div class="header mt-3">
-        <h2 class="patient">All Tickets of <%= user.firstName %></h2> 
+<main>
+    <div class="">
+        <h2 class="">All Tickets of <%= user.firstName %></h2> 
     </div>
 
-    <table>
+    <div class="planning">
         <% user.busTicket.forEach(function(busTicket) { %>
-            <tr>
-                <th><%= busTicket.createdAt %></th>
-                <td>
-                    <div class="col">
-                        <div class="debit-card">
-                            <h3 class="cardtittle"><%= busTicket.name %></h3>
-                            <h3 class="cardnumber"><%= busTicket.price %></h3>
-                            <h3 class="cardnumber"><%= busTicket.isUsed %> </h3>
-                            <h3 class="cardholder"><%= busTicket.createdBy %></h3>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        <% }) %>
-    </table>
-</div>
-
-     <% if (user.BusTicket && user.BusTicket.length > 0) { %>
-        <% user.BusTicket.forEach(function(BusTicket) { %>
-            <div class="col">
-                <div class="debit-card">
-                    <h3 class="cardtittle"><%= user.BusTicket.name %></h3>
-                    <h3 class="cardnumber"><%= BusTicket.price %></h3>
-                    <h3 class="cardnumber"><%= BusTicket.isUsed %> </h3>
-                    <h3 class="cardholder"><%= BusTicket.createdBy %></h3>
+        <div class="item">
+            <div class="left">
+                <div class="icon">
+                    <i class='bx bx-book-alt'></i>
+                </div>
+                <div class="details">
+                    <h5><%= busTicket.name %></h5>
+                    <p>Used: <%= busTicket.isUsed %></p>
+                    <p class="balance">Price: NGN<%= busTicket.amount %></p>
+                    <p class="cardholder">Ticket ID: <%= busTicket.id%></p>
+                    <p class="cardholder">Pin: <%= busTicket.pin%></p>
                 </div>
             </div>
+            <!-- incase you want to activate a more info button -->
+            <!-- <i class='bx bx-dots-vertical-rounded'></i> -->
+        </div>
         <% }) %>
-    <%}%>
+        </div>
+     
 
+   
+</main>
+
+<aside class="right-section">
     <div class="mt-5 pt-3">
-        <h1 style="text-align: center;" id="#newticket">
-          New Ticket
-        </h1>
+        
         <h3 style="text-align: center;">
            Buy a new Ticket
         </h3>
         
-         <div class="row">
+         <div>
     
             <div style="width: 70%; margin: 30px auto; ">
                 <form action="/api/busTicket/addnewbusticket/<%=user._id%>" method="POST">
@@ -70,13 +62,12 @@
                    </div>
                     </form>
                     <br>
-                    <a href="#">Dashboard</a>
+                    <a href="/api/auth/dashboard/<%=user._id%>">Dashboard</a>
             </div>
            
          </div>
     </div>
-    
-      
+    </aside>
+        
    
-</div>
 <%- include("partials/footer") %>

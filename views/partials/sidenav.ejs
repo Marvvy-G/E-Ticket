@@ -1,59 +1,78 @@
-<div class="container containerp-body">
-    <div class="sidebar">
-        <ul>
-            <li class="dashboard">
-                <i class="fa fa-dashcube"></i>
-                <a href="/api/auth/dashboard/<%=user._id%>">Dashboard</a>
-            </li>
-            <li>
-                <i class="fa fa-ticket"></i>
-                <a href="/api/busTicket/getAll/<%=user._id%>">All Tickets</a>
-            </li>
-            <li>
-                <i class="fa fa-credit-card-alt"></i>
-                <a href="/api/wallet/topup/<%=user._id%>">Top Wallet</a>
-            </li>
-            <li>
-                <i class="fa fa-credit-card-alt"></i>
-                <a data-bs-toggle="modal" data-bs-target="#myModal" href="#">Buy Ticket</a>
-            </li>
-            <div class="modal" id="myModal">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Buy New Ticket</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form action="/api/busTicket/addnewbusticket/<%=user._id%>" method="post">
-                                <div class="form-group">
-                                    <label for="productCategories">Name</label>
-                                    <select class="form-control" name="name" id="name">
-                                    
-                                      <option>General Bus Ticket</option>
-                                     
-                                    </select>
-                                  </div>
-                                  <div class="form-group">
 
-                                    <label for="amount">Price (NGN)</label>
-                                    <select class="form-control" name="amount" id="amount">
+         <aside class="left-section">
+            <div class="logo">
+                <button class="menu-btn" id="menu-close">
+                    <i class='bx bx-log-out-circle'></i>
+                </button>
+                <a href="/">Bus-E-Ticket</a>
+            </div>
 
-                                      <option>500</option>
-                                      
-                                    </select>
-                                  </div>
-
-                                  <button class="btn btn-primary mt-3">Submit</button>
-                            </form>
-                        </div>
+            <div class="sidebar">
+                <div class="item" id="active">
+                    <i class='bx bx-home-alt-2'></i>
+                    <a href="/api/auth/dashboard/<%=user._id%>">Dashboard</a>
+                </div>
+                <div class="item">
+                    <i class='bx bx-grid-alt'></i>
+                    <a href="/api/busTicket/getAll/<%=user._id%>">All Tickets</a>              
+                </div>
+                <div class="item">
+                    <i class='bx bx-folder'></i>
+                    <a href="/api/wallet/topup/<%=user._id%>">Top Wallet</a>
+                </div>
+                
+                <div class="item centre show-popup">
+                    <i class='bx bx-message-square-dots'></i>
+                    <a class="">Buy Ticket</a>
+                </div>
+                
+                <div class="popup">
+                    <div class="close-btn">&times;</div>
+                    <div class="form">
+                        <h5>Buy New Ticket</h5>
+                        <form action="/api/busTicket/addnewbusticket/<%=user._id%>" method="post">
+                            <div class="form-element">
+                                <label for="name">Name</label>
+                                <select class="form-control" name="name" id="name">
+                                    <option>General Bus Ticket</option>
+                                </select>
+                            </div>
+                            <div class="form-element">
+                                <label for="amount">Price (NGN)</label>
+                                <select class="form-control" name="amount" id="amount">
+                                    <option>500</option>
+                                </select>
+                            </div>
+                            <div class="form-element">
+                                <button class="">Submit</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
-        </div>
-        <!--  -->
-            <li>
-                <i class="fa fa-info-circle"></i>
-                <a href="/api/busTicket/one/<%=user._id%>">Profile</a>
-            </li>
-        </ul>
-    </div>
+                    
+                <div class="item">
+                    <i class='bx bx-cog'></i>
+                    <a href="/api/busTicket/one/<%=user._id%>">Profile</a>
+                </div>
+<!-- Logout button -->
+                <div class="item">
+                    <i class='bx bx-folder'></i>
+                    <a href="/api/auth/loginPage">Log Out</a>
+                </div>
+            </div>
+
+            <div class="pic">
+                <img src="/assets/pro.png">
+            </div>
+
+            <div class="upgrade">
+                <h5>Transportation Made Easier</h5>
+                <div class="link">
+                    <a href="#">Go <b>BUS-E-TICKET</b></a>
+                </div>
+            </div>
+
+        </aside>
+
+        
+

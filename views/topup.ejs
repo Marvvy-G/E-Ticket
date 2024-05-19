@@ -1,8 +1,10 @@
 <%- include("partials/header") %>
 <%- include("partials/sidenav") %>
-<div class="mt-5 pt-3">
+
+
+<div class="main">
     <div class="row">
-       <h1 style="text-align: center;">
+       <h1 style="text-align: center; margin-top: 10%;">
           Top Up Wallet
        </h1>
    
@@ -33,7 +35,7 @@
                    <button class="btn btn-lg btn-danger btn-block" type="submit">Pay Now</button>
               </div>
                </form>
-               <a href="/">Back</a>
+               <a href="/api/auth/dashboard/<%=user._id%>">Back</a>
        </div>
     </div>
 </div>

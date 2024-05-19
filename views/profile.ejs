@@ -1,36 +1,53 @@
 <%- include("partials/header") %>
 <%- include("partials/sidenav") %>
-
-<div class="container">
-    <div class="header mt-3">
-        <h2><%= user.firstName%> <%= user.lastName%></h2> 
-     </div>
-    <table>
-     
-        <tr>
-            <th>Email</th>
-            <td><%=user.email%></td>
-        </tr>
-        <tr>
-            <th>Age</th>
-            <td><%=user.age%></td>
-        </tr>
-        <tr>
-            <th>Number</th>
-            <td><%=user.number%></td>
-        </tr>
-        <tr>
-            <th>Address</th>
-            <td><%=user.address%></td>
-        </tr> 
-        <tr>
-            <th>Wallet Balance</th>
-            <td><%=user.wallet%></td>
-        </tr> 
-    </table>
-    
-
-        
+<aside class="right-section">
+    <div class="separator">
+        <h4>Profile</h4>
     </div>
+
+    <div class="weekly">
+        <div class="title">
+            <div class="line"></div>
+            <h5>Name: <%= user.firstName%> <%= user.lastName%></h5>
+        </div>
+        <div class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+        </div>
+    </div>
+    <div class="weekly">
+        <div class="title">
+            <div class="line"></div>
+            <h5>Email: <%= user.email%></h5>
+        </div>
+        <div class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+        </div>
+    </div>
+    <div class="weekly">
+        <div class="title">
+            <div class="line"></div>
+            <h5>Age: <%= user.age %></h5>
+        </div>
+        <div class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+        </div>
+    </div>
+    <div class="weekly">
+        <div class="title">
+            <div class="line"></div>
+            <h5>Tel: <%= user.number %></h5>
+        </div>
+        <div class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+        </div>
+    </div>
+    <div class="weekly">
+        <div class="title">
+            <div class="line"></div>
+            <h5>Address: <%= user.address%></h5>
+        </div>
+        <div class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+        </div>
+    </div>
+
+    <br>
+    <a href="/api/auth/dashboard/<%=user._id%>">Dashboard</a>
+    </aside>
 
 <%- include("partials/footer") %>

@@ -16,6 +16,10 @@ const BusTicketSchema = new mongoose.Schema({
     isUsed:{
         type: Boolean,
         default: false
+    },
+    pin: {
+        type: String,
+        required: true
     }
 },
 {

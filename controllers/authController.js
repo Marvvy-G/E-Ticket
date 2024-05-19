@@ -32,18 +32,38 @@ exports.signup = asyncErrorHandler(async (req, res, next) => {
 exports.dashboard = async (req, res, next) => {
     try {
         const user = await User.findById(req.params.id).populate("busTicket wallet").exec();
-        
+      
         if (!user) {
             return res.status(404).send("User not found");
         }
 
-        res.render("dashboard.ejs", { user: user });
+        // Count the number of used and unused tickets
+        let usedTickets = 0;
+        let unusedTickets = 0;
+        for (const ticket of user.busTicket) {
+            if (ticket.isUsed) {
+                usedTickets++;
+            } else {
+                unusedTickets++;
+            }
+        }
+
+        // Calculate the total number of tickets
+        const totalTickets = user.busTicket.length;
+
+        res.render("dashboard.ejs", { 
+            user: user,
+            usedTickets: usedTickets,
+            unusedTickets: unusedTickets,
+            totalTickets: totalTickets
+        });
         console.log(user); // Log the user
     } catch (err) {
         console.log(err);
         next(err); // Pass the error to the error handling middleware
     }
 };
+
 
 
 //Get Registration page to register an admin(Conductor)

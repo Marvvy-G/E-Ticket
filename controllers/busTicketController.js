@@ -4,7 +4,7 @@ const User              = require("../models/user");
 const Wallet = require("../models/wallet");
 //GET A USER
 exports.userandticket = asyncErrorHandler (async(req, res, next) => {
-    const userandticket = await User.findById(req.params.id).populate("BusTicket").exec();
+    const userandticket = await User.findById(req.params.id).populate("busTickets").exec();
     res.status(201).json({
         status: "success",
         data: {
@@ -14,22 +14,8 @@ exports.userandticket = asyncErrorHandler (async(req, res, next) => {
 });
 
 //GET ALL BUS TICKET for a unique user
-exports.getAll = async function (req, res, next) {
-    try {
-        const user = await User.findById(req.params.id).populate("busTicket").exec();
-        
-        if (!user) {
-            return res.status(404).send("User not found");
-        }
 
-        res.render("allTickets", { user: user, BusTicket: BusTicket});
-        console.log(user)
-    } catch (err) {
-        console.log(err);
-        next(err); // Pass the error to the error handling middleware
-    }
-};
-
+//profile page
 exports.one = async (req, res, next) => {
     try {
         const user = await User.findById(req.params.id);
@@ -46,17 +32,6 @@ exports.one = async (req, res, next) => {
     }
 };
 
-
-exports.getAllTickets = asyncErrorHandler (async (req, res, next) => {
-    const busTickets = await BusTicket.find().populate("createdBy").exec();
-    res.status(200).json({
-        status: "success",
-        data:
-        {
-            busTickets
-        }
-    })
-});
 
 //find Used Tickets
 exports.used = asyncErrorHandler (async(req, res, next) => {
@@ -81,20 +56,6 @@ exports.notUsed = asyncErrorHandler (async(req, res, next) => {
 
     })
 })
-    
-
-//CREATE A BUS TICKET
-// exports.addnewbusticket = asyncErrorHandler (async(req, res, next) =>{
-//     const newBusTicket     = await BusTicket.create(req.body);
-//     res.status(201).json({
-//         status: "success",
-//         data:
-//         {
-//             newBusTicket
-//         }
-//     })
-// });
-
 
 //create a bus ticket //BUY A BUS TICKET
 exports.addnewbusticket = async (req, res, next) => {
@@ -104,7 +65,7 @@ exports.addnewbusticket = async (req, res, next) => {
 
         // Check wallet balance
         const wallet = await Wallet.findOne({ user: user.id });
-        if (Wallet.balance < amount) {
+        if (wallet.balance < amount) {
             return res.status(400).json({ message: 'Insufficient funds in your wallet', amount });
         }
 
@@ -112,14 +73,24 @@ exports.addnewbusticket = async (req, res, next) => {
         wallet.balance -= amount;
         await wallet.save();
 
-        // Create ticket
-        const busTicket = new BusTicket({
-            user,
-            name,
-            amount
-        });
+      // Generate a unique 4-digit PIN
+      const generatePin = () => {
+        return Math.floor(1000 + Math.random() * 9000).toString();
+    };
+
+    const pin = generatePin();
+
+    // Create ticket
+    const busTicket = new BusTicket({
+        user: user._id,
+        name,
+        amount,
+        pin
+    });
         await busTicket.save();
-        res.redirect("/api/auth/dashboard/" + req.params.id)
+        user.busTicket.push(busTicket);
+        await user.save()
+        res.redirect("/api/busTicket/getAll/" + req.params.id)
         console.log({
             message: 'Ticket created successfully'
         });
@@ -131,18 +102,30 @@ exports.addnewbusticket = async (req, res, next) => {
     } next()
 };
 
+exports.getAll = async function (req, res, next) {
+    try {
+        const user = await User.findById(req.params.id).populate("busTicket").exec();
+        
+        if (!user) {
+            return res.status(404).send("User not found");
+        }
+
+        res.render("allTickets", { user: user, busTicket: BusTicket});
+        console.log(user)
+    } catch (err) {
+        console.log(err);
+        next(err); // Pass the error to the error handling middleware
+    }
+};
+
 
 //GET ALL BUS TICKET
-exports.getAllTickets = asyncErrorHandler (async (req, res, next) => {
-    const busTickets = await BusTicket.find().populate("createdBy").exec();
-    res.status(200).json({
-        status: "success",
-        data:
-        {
-            busTickets
-        }
-    })
+exports.getAllTickets = asyncErrorHandler(async (req, res, next) => {
+    const busTickets = await BusTicket.find().populate("user").exec();
+
+    res.render("conductor", { busTickets }); // Pass busTickets with a key
 });
+
 
 //DELETE BUS TICKETS
 exports.deleteTicket = asyncErrorHandler (async (req, res, next) => {
@@ -153,16 +136,33 @@ exports.deleteTicket = asyncErrorHandler (async (req, res, next) => {
 })
 
 //UPDATE BUS TICKET
-exports.updateTicket = asyncErrorHandler (async (req, res, next) => {
-    const busTicket = await BusTicket.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators: true})
-    res.status(200).json({
-        status: "success",
-        data:
-        {
-            busTicket
+exports.verifyAndUseTicket = async (req, res, next) => {
+    try {
+        const { ticketId, pin } = req.body;
+
+        // Find the ticket by ID
+        const busTicket = await BusTicket.findById(ticketId);
+        if (!busTicket) {
+            return res.status(404).json({ message: 'Ticket not found' });
         }
-    })
-})
+
+        // Check if the provided PIN matches the ticket's PIN
+        if (busTicket.pin !== pin) {
+            return res.status(400).json({ message: 'Invalid PIN' });
+        }
+
+        // Set the ticket as used
+        busTicket.isUsed = true;
+        await busTicket.save();
+
+        res.status(200).json({ message: 'Ticket marked as used successfully' });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Internal Server error' });
+    }
+    next();
+};
+
 
 //FIND ONE BUS TICKET
 exports.findTicket = asyncErrorHandler(async (req, res, next) => {
