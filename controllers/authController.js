@@ -37,7 +37,7 @@ const createSendResponse = (user, statusCode, res, dashboardUrl) => {
 exports.signup = asyncErrorHandler(async (req, res, next) => {
     const newUser = await User.create(req.body);
 
-    const wallet = await Wallet.create({ user: newUser._id, balance: 0 });
+    const wallet = await Wallet.create({ user: User._id, balance: 0 });
 
     newUser.wallet = wallet._id;
     await newUser.save();
@@ -45,9 +45,9 @@ exports.signup = asyncErrorHandler(async (req, res, next) => {
     // Check user role
     let dashboardUrl;
     if (newUser.role === 'user') {
-        dashboardUrl = "/api/auth/user/dashboard/" + newUser._id;
+        dashboardUrl = "/api/auth/user/dashboard/" + User._id;
     } else if (newUser.role === 'admin') {
-        dashboardUrl = "/api/busticket/admin/dashboard/" + newUser._id;
+        dashboardUrl = "/api/busticket/admin/dashboard/" + User._id;
     } else {
         const error = new CustomError("Invalid user role", 403);
         return next(error);
