@@ -15,8 +15,8 @@ const port = process.env.PORT || 5000;
 
 //DATABASE
 
-// mongoose.connect("mongodb+srv://bellsehr:password1234@bellsehr.bwuj4eh.mongodb.net/?retryWrites=true&w=majority");
-mongoose.connect("mongodb://localhost/pretty");
+mongoose.connect("mongodb+srv://bellsehr:password1234@bellsehr.bwuj4eh.mongodb.net/?retryWrites=true&w=majority");
+// mongoose.connect("mongodb://localhost/pretty");
 
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.json());
