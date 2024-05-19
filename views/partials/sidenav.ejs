@@ -9,7 +9,7 @@
 
             <div class="sidebar">
                 <div class="item" id="active">
-                    <i class='bx bx-home-alt-2'></i>
+                 <i class='bx bx-home-alt-2'></i>
                     <a href="/api/auth/dashboard/<%=user._id%>">Dashboard</a>
                 </div>
                 <div class="item">
@@ -17,12 +17,12 @@
                     <a href="/api/busTicket/getAll/<%=user._id%>">All Tickets</a>              
                 </div>
                 <div class="item">
-                    <i class='bx bx-folder'></i>
+                    <i class='bx bx-credit-card'></i>
                     <a href="/api/wallet/topup/<%=user._id%>">Top Wallet</a>
                 </div>
                 
                 <div class="item centre show-popup">
-                    <i class='bx bx-message-square-dots'></i>
+                    <i class='bx bx-cart-add'></i>
                     <a class="">Buy Ticket</a>
                 </div>
                 
@@ -51,12 +51,12 @@
                 </div>
                     
                 <div class="item">
-                    <i class='bx bx-cog'></i>
+                    <i class='bx bx-group'></i>
                     <a href="/api/busTicket/one/<%=user._id%>">Profile</a>
                 </div>
 <!-- Logout button -->
                 <div class="item">
-                    <i class='bx bx-folder'></i>
+                    <i type="solid" class='bx bx-log-out-circle'></i>
                     <a href="/api/auth/loginPage">Log Out</a>
                 </div>
             </div>
