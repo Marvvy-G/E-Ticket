@@ -37,7 +37,7 @@ const createSendResponse = (user, statusCode, res, dashboardUrl) => {
 exports.signup = asyncErrorHandler(async (req, res, next) => {
     const newUser = await User.create(req.body);
 
-    const wallet = await Wallet.create({ user: User._id, balance: 0 });
+    const wallet = await Wallet.create({ user: newUser.id, balance: 0 });
 
     newUser.wallet = wallet._id;
     await newUser.save();
@@ -45,16 +45,16 @@ exports.signup = asyncErrorHandler(async (req, res, next) => {
     // Check user role
     let dashboardUrl;
     if (newUser.role === 'user') {
-        dashboardUrl = "/api/auth/user/dashboard/" + User._id;
+        dashboardUrl = "/api/auth/dashboard/" + newUser.id;
     } else if (newUser.role === 'admin') {
-        dashboardUrl = "/api/busticket/admin/dashboard/" + User._id;
+        dashboardUrl = "/api/busticket/admin/dashboard/" + newUser.id;
     } else {
         const error = new CustomError("Invalid user role", 403);
         return next(error);
     }
 
     // Create and send response with JWT token
-    createSendResponse(User, 200, res, dashboardUrl); // Pass dashboard URL to the function
+    createSendResponse(newUser, 200, res, dashboardUrl); // Pass dashboard URL to the function
 
     console.log(newUser, wallet);
 });
@@ -137,7 +137,7 @@ exports.login = asyncErrorHandler(async (req, res, next) => {
     // Check user role
     let dashboardUrl;
     if (user.role === 'user') {
-        dashboardUrl = "/api/auth/user/dashboard/" + user._id;
+        dashboardUrl = "/api/auth/dashboard/" + user._id;
     } else if (user.role === 'admin') {
         dashboardUrl = "/api/busticket/admin/dashboard/" + user._id;
     } else {

@@ -20,6 +20,6 @@ router.route("/loginPage").get(authController.loginPage);
 //All Users
 router.route("/getAllUsers").get(authController.getAllUsers)
 //Home
-router.route("/user/dashboard/:id").get(authController.protect, authController.dashboard)
+router.route("/dashboard/:id").get(authController.protect, authController.dashboard)
 
 module.exports = router;
