@@ -9,3 +9,6 @@ document.querySelectorAll(".popup .close-btn").forEach(function(button) {
         this.parentElement.classList.remove("active");
     });
 });
+
+
+

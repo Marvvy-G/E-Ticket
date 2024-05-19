@@ -78,14 +78,20 @@ exports.addnewbusticket = async (req, res, next) => {
         return Math.floor(1000 + Math.random() * 9000).toString();
     };
 
+    const generateToken = () => {
+        return Math.floor(10000 + Math.random() * 90000).toString();
+    }
+
     const pin = generatePin();
+    const publicToken = generateToken();
 
     // Create ticket
     const busTicket = new BusTicket({
         user: user._id,
         name,
         amount,
-        pin
+        pin,
+        publicToken
     });
         await busTicket.save();
         user.busTicket.push(busTicket);
@@ -121,10 +127,35 @@ exports.getAll = async function (req, res, next) {
 
 //GET ALL BUS TICKET
 exports.getAllTickets = asyncErrorHandler(async (req, res, next) => {
-    const busTickets = await BusTicket.find().populate("user").exec();
+    if (!req.user) { // Ensure 'req.user' is correctly referenced
+        return res.status(401).json({ status: "error", message: "Unauthorized" });
+    }
+
+    try{
+        const busTickets = await BusTicket.find(req.query).populate("user").exec();
 
     res.render("conductor", { busTickets }); // Pass busTickets with a key
+} catch (err){
+    console.log(err)
+}
 });
+
+//search
+
+exports.search = async (req, res) => {
+    try {
+        let payload = req.body.payload.trim();
+        let search = await BusTicket.find({publicToken: {$regex: new RegExp('^'+payload+'.*','i')}}).populate('user').exec();
+
+        // Limit search result to 10
+        search = search.slice(0, 10);
+        res.send({payload: search});
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+
 
 
 //DELETE BUS TICKETS

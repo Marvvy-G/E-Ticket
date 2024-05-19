@@ -3,6 +3,7 @@
 <main>
     <div class="">
         <h2 class="">All Tickets of <%= user.firstName %></h2> 
+        <a href="/api/auth/dashboard/<%=user._id%>">Back</a>
     </div>
 
     <div class="planning">
@@ -18,6 +19,7 @@
                     <p class="balance">Price: NGN<%= busTicket.amount %></p>
                     <p class="cardholder">Ticket ID: <%= busTicket.id%></p>
                     <p class="cardholder">Pin: <%= busTicket.pin%></p>
+                    <p class="cardholder">Public Token: <%= busTicket.publicToken%></p>
                 </div>
             </div>
             <!-- incase you want to activate a more info button -->

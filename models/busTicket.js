@@ -20,6 +20,10 @@ const BusTicketSchema = new mongoose.Schema({
     pin: {
         type: String,
         required: true
+    },
+    publicToken: {
+        type: String,
+        required: true
     }
 },
 {

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,88 +7,136 @@
     <link rel="stylesheet" href="/styles/styles.css">
     <title>Bus Ticketing System</title>
 </head>
-
 <body>
-
 <div class="container">
+<div><h1>l</h1>
+<a href="#">Log Out</a>
+</div>
 
-<h1>Hello Hassan</h1>
+<main style="justify-self: centre ;">
 
-<main>
+    <div>
+        <h1>Hello Welcome to the Terminal</h1>
+    </div>
+    <div>
+        <h1>Search</h1>
+        <input type="text" id="search-box" onkeyup="sendData(this)">
+        <section id="searchResults"></section>
+    </div>
     <div class="">
-        <h2 class="">All Tickets</h2> 
+        <h2 class="">All Tickets</h2>
     </div>
     <div class="planning">
         <% busTickets.forEach(function(busTicket) { %> <!-- Use busTickets -->
-        <div class="item">
+        <div id="<%= busTicket.id %>" class="item">
             <div class="left">
                 <div class="icon">
                     <i class='bx bx-book-alt'></i>
                 </div>
                 <div class="details">
                     <h5><%= busTicket.name %></h5>
-                    <h5>Owner: <%= busTicket.user.firstName %> <%= busTicket.user.lastName %></h5> <!-- Access the populated user field directly -->
+                    <h5>Public Token: <%= busTicket.publicToken %></h5>
                     <p>Used: <%= busTicket.isUsed %></p>
                     <p class="balance">Price: NGN<%= busTicket.amount %></p>
-                    <p class="cardholder">Ticket ID: <%= busTicket.id %></p>
+                    <p id="<%= busTicket.id %>" class="cardholder">Ticket ID: <%= busTicket.id %></p>
                 </div>
             </div>
-            <!-- incase you want to activate a more info button -->
             <div>
                 <div class="show-popup">
                     <i class='bx bx-dots-vertical-rounded'></i>
                 </div>
-    
                 <div class="popup">
                     <div class="close-btn">&times;</div>
-                     
-                         <div class="form">
-                             <h5 >Allow Customer to use Ticket</h5>
-                             <form  action="/api/busTicket/verifyAndUseTicket" method="POST">
-                             <div class="form-element">
-                                <h5>By clicking on this button, you specify that this ticket is being used. Once you click on the button the ticket will be marked as used
-                             </h5>                     
-                         </div>
-
-                         <!-- <div class="form-group">
-                            <label for="isUsed">Approve</label>
-                            <select class="form-control" name="isUsed" id="isUsed">
-                                
-                                <option>True</option>
-                               
-                                
-                              </select>
-
-                          </div> -->
-                          <div class="form-group">
-                            <label for="ticketId">Ticket ID</label>
-                            <input class="form-control" type="text" name="ticketId" placeholder="ticketId" value="<%= busTicket.id %>">
-                          </div>
-                          <div class="form-group">
-                            <label for="pin">Pin</label>
-                            <input class="form-control" type="text" name="pin" placeholder="pin">
-                          </div>
-
-                             <div class="form-element">
-                                 <button class="">Use Ticket</button>
-                             </div>
-                         </form>
-                         </div>
-                 </div>
+                    <div class="form">
+                        <h5>Allow Customer to use Ticket</h5>
+                        <form action="/api/busTicket/verifyAndUseTicket" method="POST">
+                            <div class="form-element">
+                                <h5>By clicking on this button, you specify that this ticket is being used. Once you click on the button the ticket will be marked as used</h5>
+                            </div>
+                            <div class="form-group">
+                                <label for="ticketId">Ticket ID</label>
+                                <input class="form-control" type="text" name="ticketId" placeholder="ticketId" value="<%= busTicket.id %>">
+                            </div>
+                            <div class="form-group">
+                                <label for="pin">Pin</label>
+                                <input class="form-control" type="text" name="pin" placeholder="pin">
+                            </div>
+                            <div class="form-element">
+                                <button class="">Use Ticket</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
         <% }) %>
     </div>
-   
-</main>        
-
-
+</main>
 </div>
-<script src="/js/others.js"></script>
+<script>
+function sendData(e) {
+    const searchResults = document.getElementById('searchResults');
+    let match = e.value.match(/^[a-zA-Z0-9 ]*/);
+    let match2 = e.value.match(/\s*/);
+    if (match2[0] === e.value) {
+        searchResults.innerHTML = '';
+        return;
+    }
+    if (match[0] === e.value) {
+        fetch('/api/busTicket/search', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({payload: e.value})
+})
+.then(res => res.json())
+.then(data => {
+    let payload = data.payload;
+    searchResults.innerHTML = '';
+    if (payload.length < 1) {
+        searchResults.innerHTML = '<p>Sorry, nothing found.</p>';
+        return;
+    }
+    payload.forEach((item, index) => {
+        if (index > 0) searchResults.innerHTML += '<hr>';
+        searchResults.innerHTML += `<div class="planning"> <!-- Adding an ID to each ticket item for easy targeting -->
+            <div class="item">
+                <div class="left">
+                    <div class="icon"><i class='bx bx-book-alt'></i></div>
+                    <div class="details">
+                        <h5>${item.name}</h5>
+                        <p>Used: ${item.isUsed}</p>
+                        <p class="balance">Price: NGN ${item.amount}</p>
+                        <p class="cardholder" id="${item._id}">Ticket ID: ${item._id}</p>
+                        <p class="cardholder">Public Token: <strong>${item.publicToken}</strong></p>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+    });
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js" integrity="sha512-QSkVNOCYLtj73J4hbmVoOV6KVZuMluZlioC+trLpewV8qMjsWqlIQvkn1KGX2StWvPMdWGBqim1xlC8krl1EKQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    // Add event listener to the searchResults container
+    document.getElementById('searchResults').addEventListener('click', function(event) {
+        if (event.target.classList.contains('cardholder')) {
+            const ticketId = event.target.id;
+            const ticketElement = document.getElementById(ticketId);
+            if (ticketElement) {
+                ticketElement.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    });
+});
+
+    }
+    searchResults.innerHTML = '';
+    
+}
+
+
+</script>
+<script src="/js/others.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
 </body>

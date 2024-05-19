@@ -13,18 +13,50 @@ const signToken = id => {
                         {expiresIn: process.env.LOGIN_EXPIRES});
 }
 
-//SIGNUP/REGISTER USER
+const createSendResponse = (user, statusCode, res, dashboardUrl) => {
+    const token = signToken(user._id);
+
+    const options = {
+        max_age: process.env.LOGIN_EXPIRES * 1000, // convert to milliseconds
+        httpOnly: true,
+        // Add 'path' attribute if needed
+        // path: '/api/auth/dashboard'
+    };
+
+    if (process.env.NODE_ENV === 'production')
+        options.secure = true;
+
+    res.cookie('jwt', token, options);
+
+    user.password = undefined;
+
+    res.redirect(dashboardUrl); // Use dashboardUrl for redirection
+};
+
+// SIGNUP/REGISTER USER
 exports.signup = asyncErrorHandler(async (req, res, next) => {
     const newUser = await User.create(req.body);
-    const wallet = await Wallet.create({ user: newUser._id, balance: 0 }); // Corrected 'wallet' to 'Wallet' and fixed 'User._id' to 'newUser._id'
 
-    newUser.wallet = wallet._id; // Changed 'User.wallet' to 'newUser.wallet' to assign wallet to the new user
+    const wallet = await Wallet.create({ user: newUser._id, balance: 0 });
+
+    newUser.wallet = wallet._id;
     await newUser.save();
 
-    const token = signToken(newUser._id);
-    res.redirect("/api/auth/dashboard/" + req.params.id)
-    console.log(token, newUser, wallet);
-    next();
+    // Check user role
+    let dashboardUrl;
+    if (newUser.role === 'user') {
+        dashboardUrl = "/api/auth/user/dashboard/" + newUser._id;
+    } else if (newUser.role === 'admin') {
+        dashboardUrl = "/api/busticket/admin/dashboard/" + newUser._id;
+    } else {
+        const error = new CustomError("Invalid user role", 403);
+        return next(error);
+    }
+
+    // Create and send response with JWT token
+    createSendResponse(User, 200, res, dashboardUrl); // Pass dashboard URL to the function
+
+    console.log(newUser, wallet);
 });
 
 
@@ -86,63 +118,74 @@ exports.loginPage     =     (req, res, next) => {
    };
 
 
-//LOGIN USER
-exports.login            =    asyncErrorHandler (async (req, res, next) => {
- const {email, password} =    req.body;
-    if (!email || !password){
+// LOGIN USER
+exports.login = asyncErrorHandler(async (req, res, next) => {
+    const { email, password } = req.body;
+    if (!email || !password) {
         const error = new CustomError("Please provide email and password", 400);
         return next(error);
     }
 
-    const user = await User.findOne({email}).select("+password");
+    const user = await User.findOne({ email }).select("+password");
 
-    //const isMatch = await user.comparePasswordInDb(password, user.password);
+    // Check if user exists and password matches
+    if (!user || !(await user.comparePasswordInDb(password, user.password))) {
+        const error = new CustomError("Incorrect Email or Password", 400);
+        return next(error);
+    }
 
-   //Check if user exist and password matches
-   if(!user || !(await user.comparePasswordInDb(password, user.password))){
-    const error = new CustomError("Incorrect Email or Password", 400);
-    return next(error);
-   }
+    // Check user role
+    let dashboardUrl;
+    if (user.role === 'user') {
+        dashboardUrl = "/api/auth/user/dashboard/" + user._id;
+    } else if (user.role === 'admin') {
+        dashboardUrl = "/api/busticket/admin/dashboard/" + user._id;
+    } else {
+        const error = new CustomError("Invalid user role", 403);
+        return next(error);
+    }
 
-    const token = signToken(
-        user._id
-    )
-    res.redirect("/api/auth/dashboard/" + req.params.id)
-    console.log(token)
+    // Create and send response with JWT token
+    createSendResponse(user, 200, res, dashboardUrl); // Pass dashboard URL to the function
+
     next();
-})
+});
+
 
 //middleware for protecting routes
-exports.protect = asyncErrorHandler (async (req, res, next) => {
-    //1. Read the token and check if it exist
-        const testToken = req.headers.authorization;
-            let token;
-        if (testToken && testToken.startsWith('bearer')){
-            token = testToken.split(' ')[1];
-        }
-        if(!token) {
-            next(new CustomError("You are not logged in", 401))
-        }
-    //2. Validate the token
+exports.protect = asyncErrorHandler(async (req, res, next) => {
+    // 1. Read the token from the cookie
+    const token = req.cookies.jwt;
+
+    // 2. Check if the token exists
+    if (!token) {
+        return next(new CustomError("You are not logged in", 401));
+    }
+
+    try {
+        // 3. Validate the token
         const decodedToken = await utils.promisify(jwt.verify)(token, process.env.JWT_SEC);
-        console.log(decodedToken);
-    //3. If the user exist
+
+        // 4. Check if the user exists
         const user = await User.findById(decodedToken.id);
-        if (!user){
-            const error = new CustomError("The user with the given token does not exist", 401);
-            next(error);
+        if (!user) {
+            return next(new CustomError("The user with the given token does not exist", 401));
         }
 
-        const isPasswordChanged = await user.isPasswordChanged(decodedToken.iat)
-    //4. If the user changed password after the token was issued
-       if (isPasswordChanged){
-        const error = new CustomError("The password has been changed recently. Please login again", 400)
-        return next(error)
-       }
-    //5. Allow user to access route
-       req.user = user;
-       next();
-})
+        // 5. Check if the user's password has been changed after token issuance
+        const isPasswordChanged = await user.isPasswordChanged(decodedToken.iat);
+        if (isPasswordChanged) {
+            return next(new CustomError("The password has been changed recently. Please login again", 400));
+        }
+
+        // 6. Allow user to access the route
+        req.user = user;
+        next();
+    } catch (err) {
+        return next(err); // Pass any error to the error handling middleware
+    }
+});
+
 
 //middleware for restricting users based on their roles
 exports.restrict = (...role) => {
