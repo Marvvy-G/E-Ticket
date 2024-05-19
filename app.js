@@ -44,8 +44,8 @@ app.use("/api/busticket", busTicket);
 app.use("/api/wallet", walletRoute);
 
 //INITIATION POINT
-app.get("/", (req, res) =>{
-    res.send("Homepage")
+app.get("/api/auth/home", (req, res) =>{
+    res.render("registerP.ejs")
 })
 
 
