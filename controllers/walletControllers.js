@@ -99,7 +99,6 @@ exports.topUpWallet = async (req, res) => {
   reqPaystack.end();
 };
 
-
 exports.verify = async (req, res) => {
   const { reference } = req.query;
   const endpoint = `https://api.paystack.co/transaction/verify/${reference}`;
@@ -107,27 +106,37 @@ exports.verify = async (req, res) => {
   try {
     const response = await axios.get(endpoint, config);
 
-    const userId = response.data.data.metadata.userId
+    const userId = response.data.data.metadata.userId;
     const user = await User.findById(userId);
-    const wallet = await Wallet.findOne({user: userId});
-    const amount = response.data.data.amount;
 
-    wallet.balance += amount
+    if (!user) {
+      throw new Error(`User with ID ${userId} not found`);
+    }
+
+    const wallet = await Wallet.findOne({ user: userId });
+
+    if (!wallet) {
+      throw new Error(`Wallet for user with ID ${userId} not found`);
+    }
+
+    const amount = response.data.data.amount;
+    wallet.balance += amount;
 
     await wallet.save();
 
-    res.redirect("/api/auth/dashboard/" + userId)
-      // Return success response
-      console.log({
-        status: true,
-        data: response.data
-      });
+    res.redirect("/api/auth/dashboard/" + userId);
+
+    // Return success response
+    console.log({
+      status: true,
+      data: response.data
+    });
     
   } catch (err) {
     console.error(err);
-    console.log({
+    res.status(500).json({
       status: false,
-      error: err.message
+      error: err.message 
     });
   }
 };
