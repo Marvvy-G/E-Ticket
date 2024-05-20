@@ -58,7 +58,7 @@ exports.topUpWallet = async (req, res) => {
       number: number,
       userId: userId
     },
-    callback_url: "http://localhost:5000/api/wallet/transaction/"
+    callback_url: "https://e-ticket-b9jv.onrender.com/api/wallet/transaction/"
   });
 
   const options = {
