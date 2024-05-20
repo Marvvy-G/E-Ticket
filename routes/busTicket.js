@@ -16,7 +16,7 @@ router.route("/busticket/:id")
             .delete(authController.protect, authController.restrict("super", "user"), busTicketController.deleteTicket)
 
 router.route("/bus/:id").get(authController.protect, authController.restrict("user"), busTicketController.userandticket);
-router.route("/verifyAndUseTicket").post(authController.protect, authController.restrict("super", "user"), busTicketController.verifyAndUseTicket)
-router.route("/getAll/:id").get(authController.protect, authController.restrict("super", "user"), busTicketController.getAll);
+router.route("/verifyAndUseTicket").post(authController.protect, authController.restrict("admin"), busTicketController.verifyAndUseTicket)
+router.route("/getAll/:id").get(authController.protect, authController.restrict("admin", "user"), busTicketController.getAll);
 router.route('/search').post(busTicketController.search);
 module.exports = router;
